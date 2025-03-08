@@ -5,6 +5,7 @@ import {
 } from 'class-validator';
 
 export function IsValidDate(
+  key: string,
   ageLimit?: number,
   validationOptions?: ValidationOptions,
 ) {
@@ -50,9 +51,9 @@ export function IsValidDate(
         defaultMessage(args: ValidationArguments) {
           const ageLimit = args.constraints[0] as number;
           if (ageLimit !== undefined) {
-            return `birth_date must be a valid date in YYYY-MM-DD format and you must be at least ${ageLimit} years old.`;
+            return `${key} must be a valid date in YYYY-MM-DD format and you must be at least ${ageLimit} years old.`;
           }
-          return 'birth_date must be a valid date in YYYY-MM-DD format.';
+          return `${key} must be a valid date in YYYY-MM-DD format.`;
         },
       },
     });

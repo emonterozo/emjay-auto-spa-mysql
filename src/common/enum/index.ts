@@ -20,3 +20,11 @@ export enum EmployeeStatus {
   ACTIVE = 'ACTIVE',
   TERMINATED = 'TERMINATED',
 }
+
+export enum ExpenseCategory {
+  MANPOWER = 'MANPOWER',
+  ELECTRICITY = 'ELECTRICITY',
+  RENT = 'RENT',
+  CONSUMABLES = 'CONSUMABLES',
+  OTHERS = 'OTHERS',
+}

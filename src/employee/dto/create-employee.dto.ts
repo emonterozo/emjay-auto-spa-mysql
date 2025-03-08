@@ -17,7 +17,7 @@ export class CreateEmployeeDto {
   gender: Gender;
 
   @IsString()
-  @IsValidDate(18)
+  @IsValidDate('birth_date', 18)
   birth_date: string;
 
   @IsString()
@@ -33,6 +33,6 @@ export class CreateEmployeeDto {
   employee_status: EmployeeStatus;
 
   @IsString()
-  @IsValidDate()
+  @IsValidDate('date_started')
   date_started: string;
 }
