@@ -6,6 +6,7 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { getValidOrder } from '../common/utils/sort.util';
 
 @Injectable()
 export class EmployeesService {
@@ -19,15 +20,15 @@ export class EmployeesService {
   }
 
   async findAll(paginationDto: PaginationDto) {
+    const orderClause = getValidOrder(
+      this.employeeRepository,
+      paginationDto.order_by,
+    );
+
     const [data, total] = await this.employeeRepository.findAndCount({
       take: paginationDto.limit,
       skip: paginationDto.offset,
-      order: paginationDto.order_by?.field
-        ? {
-            [paginationDto.order_by?.field]:
-              paginationDto.order_by?.direction.toUpperCase(),
-          }
-        : undefined,
+      order: orderClause,
     });
 
     return { data, total };

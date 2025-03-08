@@ -6,6 +6,7 @@ import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './entities/service.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { getValidOrder } from '../common/utils/sort.util';
 
 @Injectable()
 export class ServicesService {
@@ -20,16 +21,16 @@ export class ServicesService {
   }
 
   async findAll(paginationDto: PaginationDto) {
+    const orderClause = getValidOrder(
+      this.serviceRepository,
+      paginationDto.order_by,
+    );
+
     const [data, total] = await this.serviceRepository.findAndCount({
       relations: ['price_list'],
       take: paginationDto.limit,
       skip: paginationDto.offset,
-      order: paginationDto.order_by?.field
-        ? {
-            [paginationDto.order_by.field]:
-              paginationDto.order_by.direction.toUpperCase(),
-          }
-        : undefined,
+      order: orderClause,
     });
 
     return { data, total };
