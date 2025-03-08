@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsInt, IsString, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export enum OrderDirection {
   ASC = 'asc',
@@ -16,15 +16,17 @@ export class OrderByDto {
 }
 
 export class PaginationDto {
+  @IsOptional()
   @Type(() => Number)
   @IsInt({ message: 'limit must be an integer' })
   @Min(1, { message: 'limit must be at least 1' })
-  limit: number;
+  limit?: number;
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt({ message: 'offset must be an integer' })
   @Min(0, { message: 'offset must be at least 0' })
-  offset: number;
+  offset?: number;
 
   @Transform(
     ({ value }) => {
@@ -52,5 +54,5 @@ export class PaginationDto {
     },
     { toClassOnly: true },
   )
-  order_by: OrderByDto;
+  order_by?: OrderByDto;
 }

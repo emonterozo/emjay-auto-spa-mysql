@@ -11,7 +11,6 @@ import {
   HttpCode,
   HttpStatus,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -44,15 +43,15 @@ export class ServicesController {
   @Patch(':id')
   @UsePipes(new ValidationPipe({ transform: true }))
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body(ValidationPipe) updateServiceDto: UpdateServiceDto,
   ) {
-    return this.servicesService.update(id, updateServiceDto);
+    return this.servicesService.update(+id, updateServiceDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.servicesService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.servicesService.remove(+id);
   }
 }

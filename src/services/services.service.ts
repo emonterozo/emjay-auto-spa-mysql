@@ -19,16 +19,20 @@ export class ServicesService {
     return await this.serviceRepository.save(service);
   }
 
-  findAll(paginationDto: PaginationDto) {
-    return this.serviceRepository.find({
+  async findAll(paginationDto: PaginationDto) {
+    const [data, total] = await this.serviceRepository.findAndCount({
       relations: ['price_list'],
       take: paginationDto.limit,
       skip: paginationDto.offset,
-      order: {
-        [paginationDto.order_by.field]:
-          paginationDto.order_by.direction.toUpperCase(),
-      },
+      order: paginationDto.order_by?.field
+        ? {
+            [paginationDto.order_by.field]:
+              paginationDto.order_by.direction.toUpperCase(),
+          }
+        : undefined,
     });
+
+    return { data, total };
   }
 
   async findOne(id: number) {
@@ -37,7 +41,7 @@ export class ServicesService {
       relations: ['price_list'],
     });
 
-    if (!service) throw new NotFoundException('Service not exist');
+    if (!service) throw new NotFoundException('Service not found');
 
     return service;
   }
@@ -48,7 +52,7 @@ export class ServicesService {
       ...updateServiceDto,
     });
 
-    if (!service) throw new NotFoundException('Service not exist');
+    if (!service) throw new NotFoundException('Service not found');
 
     return await this.serviceRepository.save(service);
   }
@@ -56,6 +60,6 @@ export class ServicesService {
   async remove(id: number) {
     const result = await this.serviceRepository.delete(id);
 
-    if (result.affected === 0) throw new NotFoundException('Service not exist');
+    if (result.affected === 0) throw new NotFoundException('Service not found');
   }
 }

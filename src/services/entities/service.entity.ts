@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { PriceList } from './price-list.entity';
 import { Review } from './review.entity';
+import { VehicleType } from '../../common/enum';
 
 @Entity({ name: 'services' })
 export class Service {
@@ -13,7 +14,7 @@ export class Service {
   @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ type: 'enum', enum: ['car', 'motorcycle'], nullable: false })
+  @Column({ type: 'enum', enum: VehicleType, nullable: false })
   type: string;
 
   @OneToMany(() => PriceList, (priceList) => priceList.service, {

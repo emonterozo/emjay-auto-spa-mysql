@@ -14,16 +14,16 @@ export class Review {
   id: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  user_name: string; // Name of the reviewer
+  user_name: string;
 
   @Column({ type: 'text', nullable: false })
-  comment: string; // Review comment
+  comment: string;
 
   @Column({ type: 'decimal', precision: 2, scale: 1, nullable: false })
-  rating: number; // Rating (e.g., 4.5, 5.0)
+  rating: number;
 
   @CreateDateColumn()
-  created_at: Date; // Timestamp of the review
+  created_at: Date;
 
   @ManyToOne(() => Service, (service) => service.reviews, {
     onDelete: 'CASCADE',

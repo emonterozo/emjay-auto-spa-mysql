@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Service } from './service.entity';
+import { VehicleSize } from '../../common/enum/index';
 
 @Entity({ name: 'price_lists' })
 export class PriceList {
@@ -14,7 +15,7 @@ export class PriceList {
 
   @Column({
     type: 'enum',
-    enum: ['sm', 'md', 'lg', 'xl', 'xxl'],
+    enum: VehicleSize,
     nullable: false,
   })
   size: string;

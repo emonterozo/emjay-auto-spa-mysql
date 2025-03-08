@@ -8,19 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-
-export enum VehicleType {
-  CAR = 'car',
-  MOTORCYCLE = 'motorcycle',
-}
-
-export enum VehicleSize {
-  SM = 'sm',
-  MD = 'md',
-  LG = 'lg',
-  XL = 'xl',
-  XXL = 'xxl',
-}
+import { VehicleSize, VehicleType } from '../../common/enum';
 
 class PriceItem {
   @IsNumber()
