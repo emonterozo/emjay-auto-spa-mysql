@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './entities/service.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class ServicesService {
@@ -18,8 +19,16 @@ export class ServicesService {
     return await this.serviceRepository.save(service);
   }
 
-  findAll() {
-    return this.serviceRepository.find({ relations: ['price_list'] });
+  findAll(paginationDto: PaginationDto) {
+    return this.serviceRepository.find({
+      relations: ['price_list'],
+      take: paginationDto.limit,
+      skip: paginationDto.offset,
+      order: {
+        [paginationDto.order_by.field]:
+          paginationDto.order_by.direction.toUpperCase(),
+      },
+    });
   }
 
   async findOne(id: number) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { BadRequestException } from '@nestjs/common';
 import { Transform, Type } from 'class-transformer';
 import {
@@ -58,33 +57,29 @@ export class CreateServiceDto {
 
   @IsNotEmpty()
   @Transform(({ value }) => {
-    try {
-      if (typeof value === 'string') {
-        value = JSON.parse(value) as PriceItem[];
-      }
+    if (typeof value === 'string') {
+      value = JSON.parse(value) as PriceItem[];
+    }
 
-      if (!Array.isArray(value)) {
-        throw new BadRequestException('price_list must be a valid JSON array');
-      }
-
-      // ✅ Validate Each Object to Match PriceItem Format
-      value.forEach((item: PriceItem) => {
-        if (
-          typeof item.earning_points !== 'number' ||
-          typeof item.points !== 'number' ||
-          typeof item.price !== 'number' ||
-          typeof item.size !== 'string'
-        ) {
-          throw new BadRequestException(
-            'Each item in price_list must match PriceItem format',
-          );
-        }
-      });
-
-      return value as PriceItem[];
-    } catch {
+    if (!Array.isArray(value)) {
       throw new BadRequestException('price_list must be a valid JSON array');
     }
+
+    // ✅ Validate Each Object to Match PriceItem Format
+    value.forEach((item: PriceItem) => {
+      if (
+        typeof item.earning_points !== 'number' ||
+        typeof item.points !== 'number' ||
+        typeof item.price !== 'number' ||
+        typeof item.size !== 'string'
+      ) {
+        throw new BadRequestException(
+          'Each item in price_list must match PriceItem format',
+        );
+      }
+    });
+
+    return value as PriceItem[];
   })
   @IsArray()
   @ValidateNested({ each: true })

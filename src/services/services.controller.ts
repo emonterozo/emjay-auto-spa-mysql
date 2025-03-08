@@ -10,10 +10,13 @@ import {
   UsePipes,
   HttpCode,
   HttpStatus,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('services')
 export class ServicesController {
@@ -26,8 +29,11 @@ export class ServicesController {
   }
 
   @Get()
-  findAll() {
-    return this.servicesService.findAll();
+  findAll(
+    @Query(new ValidationPipe({ transform: true }))
+    paginationDto: PaginationDto,
+  ) {
+    return this.servicesService.findAll(paginationDto);
   }
 
   @Get(':id')
@@ -38,15 +44,15 @@ export class ServicesController {
   @Patch(':id')
   @UsePipes(new ValidationPipe({ transform: true }))
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateServiceDto: UpdateServiceDto,
   ) {
-    return this.servicesService.update(+id, updateServiceDto);
+    return this.servicesService.update(id, updateServiceDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.servicesService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.servicesService.remove(id);
   }
 }
