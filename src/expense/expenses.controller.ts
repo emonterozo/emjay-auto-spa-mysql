@@ -9,6 +9,8 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { ExpensesService } from './expenses.service';
@@ -45,6 +47,7 @@ export class ExpensesController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.expensesService.remove(+id);
   }

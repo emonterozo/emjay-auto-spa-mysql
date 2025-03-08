@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString, Min } from 'class-validator';
 
 import { ExpenseCategory } from '../../common/enum';
 import { IsValidDate } from '../../common/decorator/is-valid-date.decorator';
@@ -11,6 +11,7 @@ export class CreateExpenseDto {
   description: string;
 
   @IsNumber()
+  @Min(1)
   amount: number;
 
   @IsString()

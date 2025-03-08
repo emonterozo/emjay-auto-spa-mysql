@@ -6,27 +6,25 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { VehicleSize, VehicleType } from '../../common/enum';
 
 class PriceItem {
   @IsNumber()
-  @IsNotEmpty()
   earning_points: number;
 
   @IsNumber()
-  @IsNotEmpty()
   points: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @Min(1)
   price: number;
 
   @IsEnum(VehicleSize, {
     message: `size must be one of: ${Object.values(VehicleSize).join(', ')}`,
   })
-  @IsNotEmpty()
   size: VehicleSize;
 }
 

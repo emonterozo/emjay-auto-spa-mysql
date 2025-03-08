@@ -2,17 +2,19 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { DatabaseModule } from './database/database.module';
-import { ServicesModule } from './service/services.module';
-import { EmployeesModule } from './employee/employees.module';
-import { ExpensesModule } from './expense/expenses.module';
+import { ServiceModule } from './service/services.module';
+import { EmployeeModule } from './employee/employees.module';
+import { ExpenseModule } from './expense/expenses.module';
+import { ConsumableModule } from './consumable/consumables.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
-    ServicesModule,
-    EmployeesModule,
-    ExpensesModule,
+    ServiceModule,
+    EmployeeModule,
+    ExpenseModule,
+    ConsumableModule,
   ],
   controllers: [],
   providers: [],

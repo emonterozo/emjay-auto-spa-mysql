@@ -39,6 +39,8 @@ export class ExpensesService {
     const expense = await this.expenseRepository.findOne({ where: { id } });
 
     if (!expense) throw new NotFoundException('Expense not found');
+
+    return expense;
   }
 
   async update(id: number, updateExpenseDto: UpdateExpenseDto) {
@@ -48,6 +50,8 @@ export class ExpensesService {
     });
 
     if (!expense) throw new NotFoundException('Expense not found');
+
+    return await this.expenseRepository.save(expense);
   }
 
   async remove(id: number) {

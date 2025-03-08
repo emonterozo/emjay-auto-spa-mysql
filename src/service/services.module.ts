@@ -12,4 +12,4 @@ import { Review } from './entities/review.entity';
   controllers: [ServicesController],
   providers: [ServicesService],
 })
-export class ServicesModule {}
+export class ServiceModule {}
