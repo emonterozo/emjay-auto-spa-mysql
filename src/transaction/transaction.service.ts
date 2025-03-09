@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
@@ -16,6 +16,8 @@ import {
 } from '../common/enum';
 import { CreateAvailedServiceDto } from './dto/create-availed-service.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { UpdateAvailedServiceDto } from './dto/update-availed-service.dto';
+import { Employee } from '../employee/entities/employee.entity';
 
 @Injectable()
 export class TransactionService {
@@ -25,6 +27,9 @@ export class TransactionService {
 
     @InjectRepository(AvailedService)
     private readonly availedServiceRepository: Repository<AvailedService>,
+
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto) {
@@ -49,7 +54,7 @@ export class TransactionService {
       transaction: { id: result.id },
     });
 
-    return result;
+    return { transaction: result };
   }
 
   async update(id: number, updateTransactionDto: UpdateTransactionDto) {
@@ -165,5 +170,81 @@ export class TransactionService {
       service: { id: createAvailedServiceDto.service_id },
       transaction: { id },
     });
+  }
+  async updateAvailedService(
+    transaction_id: number,
+    availed_service_id: number,
+    updateAvailedServiceDto: UpdateAvailedServiceDto,
+  ) {
+    const availedService = await this.availedServiceRepository.findOne({
+      where: { id: availed_service_id },
+    });
+
+    if (!availedService)
+      throw new NotFoundException('Availed service not found');
+
+    const isFree = updateAvailedServiceDto.is_free;
+    const actualPrice =
+      availedService.price - updateAvailedServiceDto.deduction;
+
+    if (updateAvailedServiceDto.assigned_employees) {
+      const employees = await this.employeeRepository.findBy({
+        id: In(updateAvailedServiceDto.assigned_employees),
+      });
+
+      const existingEmployeeIds = employees.map((emp) => emp.id);
+
+      const invalidEmployeeIds =
+        updateAvailedServiceDto.assigned_employees.filter(
+          (id) => !existingEmployeeIds.includes(id),
+        );
+
+      if (invalidEmployeeIds.length > 0)
+        throw new NotFoundException(
+          `Employees not found with IDs: ${invalidEmployeeIds.join(', ')}`,
+        );
+    }
+
+    availedService.discount = isFree
+      ? availedService.price
+      : updateAvailedServiceDto.discount;
+    availedService.deduction = updateAvailedServiceDto.deduction;
+    availedService.company_earnings = Math.max(
+      0,
+      actualPrice * 0.6 -
+        (isFree ? actualPrice : updateAvailedServiceDto.discount),
+    );
+    availedService.employee_share = actualPrice * 0.4;
+    availedService.is_free = isFree;
+    availedService.is_paid = isFree ? true : updateAvailedServiceDto.is_paid;
+    availedService.start_date =
+      updateAvailedServiceDto.status === AvailedServiceStatus['ONGOING']
+        ? new Date()
+        : availedService.start_date;
+    availedService.end_date =
+      updateAvailedServiceDto.status === AvailedServiceStatus['DONE']
+        ? new Date()
+        : availedService.end_date;
+    availedService.status = updateAvailedServiceDto.status;
+
+    await this.availedServiceRepository.save(availedService);
+
+    const relation = this.availedServiceRepository
+      .createQueryBuilder()
+      .relation(AvailedService, 'assigned_employees')
+      .of(availed_service_id);
+
+    await relation.remove(await relation.loadMany());
+
+    if (updateAvailedServiceDto.assigned_employees?.length > 0) {
+      await relation.add(updateAvailedServiceDto.assigned_employees);
+    }
+
+    return {
+      transaction: {
+        id: transaction_id,
+        availed_service: { id: availed_service_id },
+      },
+    };
   }
 }

@@ -16,7 +16,9 @@ export class EmployeeService {
   ) {}
   async create(createEmployeeDto: CreateEmployeeDto) {
     const employee = this.employeeRepository.create(createEmployeeDto);
-    return await this.employeeRepository.save(employee);
+    const result = await this.employeeRepository.save(employee);
+
+    return { employee: result };
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -31,7 +33,7 @@ export class EmployeeService {
       order: orderClause,
     });
 
-    return { data, total };
+    return { employees: data, total };
   }
 
   async findOne(id: number) {
@@ -39,18 +41,20 @@ export class EmployeeService {
 
     if (!employee) throw new NotFoundException('Employee not found');
 
-    return employee;
+    return { employee };
   }
 
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    const service = await this.employeeRepository.preload({
+    const employee = await this.employeeRepository.preload({
       id,
       ...updateEmployeeDto,
     });
 
-    if (!service) throw new NotFoundException('Employee not found');
+    if (!employee) throw new NotFoundException('Employee not found');
 
-    return await this.employeeRepository.save(service);
+    const result = await this.employeeRepository.save(employee);
+
+    return { employee: result };
   }
 
   async remove(id: number) {

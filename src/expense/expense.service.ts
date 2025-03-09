@@ -17,7 +17,9 @@ export class ExpenseService {
 
   async create(createExpenseDto: CreateExpenseDto) {
     const expense = this.expenseRepository.create(createExpenseDto);
-    return await this.expenseRepository.save(expense);
+    const result = await this.expenseRepository.save(expense);
+
+    return { expense: result };
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -32,7 +34,7 @@ export class ExpenseService {
       order: orderClause,
     });
 
-    return { data, total };
+    return { expenses: data, total };
   }
 
   async findOne(id: number) {
@@ -40,7 +42,7 @@ export class ExpenseService {
 
     if (!expense) throw new NotFoundException('Expense not found');
 
-    return expense;
+    return { expense };
   }
 
   async update(id: number, updateExpenseDto: UpdateExpenseDto) {
@@ -51,7 +53,8 @@ export class ExpenseService {
 
     if (!expense) throw new NotFoundException('Expense not found');
 
-    return await this.expenseRepository.save(expense);
+    const result = await this.expenseRepository.save(expense);
+    return { expense: result };
   }
 
   async remove(id: number) {

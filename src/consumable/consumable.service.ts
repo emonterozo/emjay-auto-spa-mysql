@@ -32,7 +32,7 @@ export class ConsumableService {
 
     await this.expenseRepository.save(expense);
 
-    return result;
+    return { consumable: result };
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -47,7 +47,7 @@ export class ConsumableService {
       order: orderClause,
     });
 
-    return { data, total };
+    return { consumables: data, total };
   }
 
   async findOne(id: number) {
@@ -57,7 +57,7 @@ export class ConsumableService {
 
     if (!consumable) throw new NotFoundException('Consumable not found');
 
-    return consumable;
+    return { consumable };
   }
 
   async update(id: number, updateConsumableDto: UpdateConsumableDto) {
@@ -68,7 +68,9 @@ export class ConsumableService {
 
     if (!consumable) throw new NotFoundException('Consumable not found');
 
-    return await this.consumableRepository.save(consumable);
+    const result = await this.consumableRepository.save(consumable);
+
+    return { consumable: result };
   }
 
   async remove(id: number) {

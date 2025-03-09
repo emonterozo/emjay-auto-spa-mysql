@@ -17,7 +17,11 @@ export class ServiceService {
 
   async create(createServiceDto: CreateServiceDto) {
     const service = this.serviceRepository.create(createServiceDto);
-    return await this.serviceRepository.save(service);
+    const result = await this.serviceRepository.save(service);
+
+    return {
+      service: result,
+    };
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -33,7 +37,7 @@ export class ServiceService {
       order: orderClause,
     });
 
-    return { data, total };
+    return { services: data, total };
   }
 
   async findOne(id: number) {
@@ -44,7 +48,7 @@ export class ServiceService {
 
     if (!service) throw new NotFoundException('Service not found');
 
-    return service;
+    return { service };
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
@@ -55,7 +59,8 @@ export class ServiceService {
 
     if (!service) throw new NotFoundException('Service not found');
 
-    return await this.serviceRepository.save(service);
+    const result = await this.serviceRepository.save(service);
+    return { service: result };
   }
 
   async remove(id: number) {
