@@ -9,7 +9,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { getValidOrder } from '../common/utils/sort.util';
 
 @Injectable()
-export class ServicesService {
+export class ServiceService {
   constructor(
     @InjectRepository(Service)
     private readonly serviceRepository: Repository<Service>,

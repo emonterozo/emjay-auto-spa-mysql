@@ -12,19 +12,20 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ConsumablesService } from './consumables.service';
+
+import { ConsumableService } from './consumable.service';
 import { CreateConsumableDto } from './dto/create-consumable.dto';
 import { UpdateConsumableDto } from './dto/update-consumable.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('consumables')
-export class ConsumablesController {
-  constructor(private readonly consumablesService: ConsumablesService) {}
+export class ConsumableController {
+  constructor(private readonly consumableService: ConsumableService) {}
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body(ValidationPipe) createConsumableDto: CreateConsumableDto) {
-    return this.consumablesService.create(createConsumableDto);
+    return this.consumableService.create(createConsumableDto);
   }
 
   @Get()
@@ -32,12 +33,12 @@ export class ConsumablesController {
     @Query(new ValidationPipe({ transform: true }))
     paginationDto: PaginationDto,
   ) {
-    return this.consumablesService.findAll(paginationDto);
+    return this.consumableService.findAll(paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.consumablesService.findOne(+id);
+    return this.consumableService.findOne(+id);
   }
 
   @Patch(':id')
@@ -45,12 +46,12 @@ export class ConsumablesController {
     @Param('id') id: string,
     @Body() updateConsumableDto: UpdateConsumableDto,
   ) {
-    return this.consumablesService.update(+id, updateConsumableDto);
+    return this.consumableService.update(+id, updateConsumableDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.consumablesService.remove(+id);
+    return this.consumableService.remove(+id);
   }
 }

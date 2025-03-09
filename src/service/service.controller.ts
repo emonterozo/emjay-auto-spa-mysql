@@ -12,19 +12,19 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
-import { ServicesService } from './services.service';
+import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('services')
-export class ServicesController {
-  constructor(private readonly servicesService: ServicesService) {}
+export class ServiceController {
+  constructor(private readonly serviceService: ServiceService) {}
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body(ValidationPipe) createServiceDto: CreateServiceDto) {
-    return this.servicesService.create(createServiceDto);
+    return this.serviceService.create(createServiceDto);
   }
 
   @Get()
@@ -32,12 +32,12 @@ export class ServicesController {
     @Query(new ValidationPipe({ transform: true }))
     paginationDto: PaginationDto,
   ) {
-    return this.servicesService.findAll(paginationDto);
+    return this.serviceService.findAll(paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.servicesService.findOne(+id);
+    return this.serviceService.findOne(+id);
   }
 
   @Patch(':id')
@@ -46,12 +46,12 @@ export class ServicesController {
     @Param('id') id: string,
     @Body(ValidationPipe) updateServiceDto: UpdateServiceDto,
   ) {
-    return this.servicesService.update(+id, updateServiceDto);
+    return this.serviceService.update(+id, updateServiceDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.servicesService.remove(+id);
+    return this.serviceService.remove(+id);
   }
 }

@@ -9,7 +9,7 @@ import { getValidOrder } from '../common/utils/sort.util';
 import { Expense } from './entities/expense.entity';
 
 @Injectable()
-export class ExpensesService {
+export class ExpenseService {
   constructor(
     @InjectRepository(Expense)
     private readonly expenseRepository: Repository<Expense>,

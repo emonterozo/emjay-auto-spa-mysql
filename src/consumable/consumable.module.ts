@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConsumableService } from './consumable.service';
+import { ConsumableController } from './consumable.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { ConsumablesService } from './consumables.service';
-import { ConsumablesController } from './consumables.controller';
 import { Consumable } from './entities/consumable.entity';
 import { Expense } from '../expense/entities/expense.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Consumable, Expense])],
-  controllers: [ConsumablesController],
-  providers: [ConsumablesService],
+  controllers: [ConsumableController],
+  providers: [ConsumableService],
 })
 export class ConsumableModule {}

@@ -11,7 +11,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { getValidOrder } from '../common/utils/sort.util';
 
 @Injectable()
-export class ConsumablesService {
+export class ConsumableService {
   constructor(
     @InjectRepository(Consumable)
     private readonly consumableRepository: Repository<Consumable>,

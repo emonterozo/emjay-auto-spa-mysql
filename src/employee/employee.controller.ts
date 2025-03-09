@@ -13,19 +13,19 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { EmployeesService } from './employees.service';
+import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('employees')
-export class EmployeesController {
-  constructor(private readonly employeesService: EmployeesService) {}
+export class EmployeeController {
+  constructor(private readonly employeeService: EmployeeService) {}
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
-    return this.employeesService.create(createEmployeeDto);
+    return this.employeeService.create(createEmployeeDto);
   }
 
   @Get()
@@ -33,12 +33,12 @@ export class EmployeesController {
     @Query(new ValidationPipe({ transform: true }))
     paginationDto: PaginationDto,
   ) {
-    return this.employeesService.findAll(paginationDto);
+    return this.employeeService.findAll(paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.employeesService.findOne(+id);
+    return this.employeeService.findOne(+id);
   }
 
   @Patch(':id')
@@ -46,12 +46,12 @@ export class EmployeesController {
     @Param('id') id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    return this.employeesService.update(+id, updateEmployeeDto);
+    return this.employeeService.update(+id, updateEmployeeDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.employeesService.remove(+id);
+    return this.employeeService.remove(+id);
   }
 }
