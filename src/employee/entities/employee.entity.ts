@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 
 import { EmployeeStatus, Gender } from '../../common/enum';
+import { AvailedService } from '../../transaction/entities/availed-service.entity';
 
 @Entity({ name: 'employees' })
 export class Employee {
@@ -30,4 +31,10 @@ export class Employee {
 
   @Column({ type: 'timestamp', nullable: false })
   date_started: Date;
+
+  @ManyToMany(
+    () => AvailedService,
+    (availedService) => availedService.assigned_employees,
+  )
+  availed_services: AvailedService[];
 }

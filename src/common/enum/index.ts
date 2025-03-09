@@ -28,3 +28,21 @@ export enum ExpenseCategory {
   CONSUMABLES = 'CONSUMABLES',
   OTHERS = 'OTHERS',
 }
+
+export enum TransactionStatus {
+  ONGOING = 'ONGOING',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum AvailedServiceStatus {
+  PENDING = 'PENDING',
+  ONGOING = 'ONGOING',
+  DONE = 'DONE',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum ServiceCharge {
+  FREE = 'free',
+  NOT_FREE = 'not free',
+}

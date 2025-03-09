@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { PriceList } from './price-list.entity';
 import { Review } from './review.entity';
 import { VehicleType } from '../../common/enum';
+import { AvailedService } from '../../transaction/entities/availed-service.entity';
 
 @Entity({ name: 'services' })
 export class Service {
@@ -42,4 +43,9 @@ export class Service {
 
   @OneToMany(() => Review, (review) => review.service, { cascade: true })
   reviews: Review[];
+
+  @OneToMany(() => AvailedService, (review) => review.service, {
+    cascade: true,
+  })
+  availed_service: AvailedService;
 }
